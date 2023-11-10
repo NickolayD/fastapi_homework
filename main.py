@@ -1,8 +1,9 @@
-from enum import Enum
-from fastapi import FastAPI
-from pydantic import BaseModel
-
 import requests
+from enum import Enum
+from typing import List
+from typing_extensions import Annotated
+from fastapi import FastAPI, Path
+from pydantic import BaseModel
 from random import randint
 
 
@@ -42,9 +43,23 @@ post_db = [
 ]
 
 
-@app.get('/')
+@app.get('/', summary='Root', operation_id='root__get')
 def root() -> str:
     ''' Return interesting fact about random number fron 1 to 1000 '''
     return requests.get("http://numbersapi.com/{}".format(randint(1, 1000))).text
 
+@app.get('/dog', summary='Get dogs', operation_id='get_dogs_dog_get')
+def get_dog(kind: DogType) -> List[Dog]:
+    ''' Return the list of dogs with such DogType from dog_db '''
+    tmp = []
+    for k, v in dog_db.items():
+        if v.kind == kind:
+            tmp.append(dog_db[k])
+    return tmp
 
+@app.get('/dog/{pk}', summary='Get Dog By Pk', operation_id='get_dog_by_pk_dog__pk__get')
+def get_dog_pk(pk: Annotated[int, Path(ge=0, le=len(dogs_db)-1)) -> Dog:
+    ''' Return Dog from dogs_db with given pk + (added Pk bounds check)'''
+    for k, v in dogs_db.items():
+        if v.pk == pk:
+            return dogs_db[k]
