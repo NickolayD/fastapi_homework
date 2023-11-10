@@ -1,10 +1,10 @@
 import requests
 from enum import Enum
 from typing import List
-from typing_extensions import Annotated
 from fastapi import FastAPI, Path
 from pydantic import BaseModel
 from random import randint
+from time import time
 
 
 app = FastAPI()
@@ -63,3 +63,23 @@ def get_dog_pk(pk: Annotated[int, Path(ge=0, le=len(dogs_db)-1)]) -> Dog:
     for k, v in dogs_db.items():
         if v.pk == pk:
             return dogs_db[k]
+
+@app.post('/dog', response_model=Dog, summary='Create Dog', operation_id='create_dog_dog_post')
+def post_dog(dog: Dog) -> Dog:
+    ''' Add Dog to dogs_db. Return added Dog '''
+    dogs_db[len(dogs_db)] = dog
+    return dog
+
+@app.post('/post', response_model=Timestamp, summary='Get Post', operation_id='get_post_post_post')
+def post() -> Timestamp:
+    ''' Add Timestamp to post_db. Return added Timestamp '''
+    post_db.append(Timestamp(id=len(post_db), timestamp=time()))
+    return post_db[-1]
+
+@app.patch('/dog/{pk}', response_model=Dog, summary='Update Dog', operation_id='update_dog_dog__pk__patch')
+def patch(pk: int, dog: Dog) -> Dog:
+    ''' Update dog info. Return updated dog '''
+    for k, v in dogs_db.items():
+        if v.pk == pk:
+            dogs_db[k] = dog
+            return dog
