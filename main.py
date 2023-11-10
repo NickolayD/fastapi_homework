@@ -58,7 +58,7 @@ def get_dog(kind: DogType) -> List[Dog]:
     return tmp
 
 @app.get('/dog/{pk}', summary='Get Dog By Pk', operation_id='get_dog_by_pk_dog__pk__get')
-def get_dog_pk(pk: Annotated[int, Path(ge=0, le=len(dogs_db)-1)) -> Dog:
+def get_dog_pk(pk: Annotated[int, Path(ge=0, le=len(dogs_db)-1)]) -> Dog:
     ''' Return Dog from dogs_db with given pk + (added Pk bounds check)'''
     for k, v in dogs_db.items():
         if v.pk == pk:
