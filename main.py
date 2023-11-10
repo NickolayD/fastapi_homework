@@ -52,9 +52,9 @@ def root() -> str:
 def get_dog(kind: DogType) -> List[Dog]:
     ''' Return the list of dogs with such DogType from dog_db '''
     tmp = []
-    for k, v in dog_db.items():
+    for k, v in dogs_db.items():
         if v.kind == kind:
-            tmp.append(dog_db[k])
+            tmp.append(dogs_db[k])
     return tmp
 
 @app.get('/dog/{pk}', summary='Get Dog By Pk', operation_id='get_dog_by_pk_dog__pk__get')
