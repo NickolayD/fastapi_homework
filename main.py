@@ -43,12 +43,12 @@ post_db = [
 ]
 
 
-@app.get('/', summary='Root', operation_id='root__get')
+@app.get('/', response_model=str, summary='Root', operation_id='root__get')
 def root() -> str:
     ''' Return interesting fact about random number fron 1 to 1000 '''
     return requests.get("http://numbersapi.com/{}".format(randint(1, 1000))).text
 
-@app.get('/dog', summary='Get dogs', operation_id='get_dogs_dog_get')
+@app.get('/dog', response_model=List[Dog], summary='Get dogs', operation_id='get_dogs_dog_get')
 def get_dog(kind: DogType) -> List[Dog]:
     ''' Return the list of dogs with such DogType from dog_db '''
     tmp = []
@@ -57,8 +57,8 @@ def get_dog(kind: DogType) -> List[Dog]:
             tmp.append(dogs_db[k])
     return tmp
 
-@app.get('/dog/{pk}', summary='Get Dog By Pk', operation_id='get_dog_by_pk_dog__pk__get')
-def get_dog_pk(pk: Annotated[int, Path(ge=0, le=len(dogs_db)-1)]) -> Dog:
+@app.get('/dog/{pk}', response_model=Dog, summary='Get Dog By Pk', operation_id='get_dog_by_pk_dog__pk__get')
+def get_dog_pk(pk: int) -> Dog:
     ''' Return Dog from dogs_db with given pk '''
     for k, v in dogs_db.items():
         if v.pk == pk:
