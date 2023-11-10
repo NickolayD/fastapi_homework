@@ -1,7 +1,7 @@
 import requests
 from enum import Enum
 from typing import List
-from fastapi import FastAPI, Path
+from fastapi import FastAPI
 from pydantic import BaseModel
 from random import randint
 from time import time
@@ -59,7 +59,7 @@ def get_dog(kind: DogType) -> List[Dog]:
 
 @app.get('/dog/{pk}', summary='Get Dog By Pk', operation_id='get_dog_by_pk_dog__pk__get')
 def get_dog_pk(pk: Annotated[int, Path(ge=0, le=len(dogs_db)-1)]) -> Dog:
-    ''' Return Dog from dogs_db with given pk + (added Pk bounds check)'''
+    ''' Return Dog from dogs_db with given pk '''
     for k, v in dogs_db.items():
         if v.pk == pk:
             return dogs_db[k]
